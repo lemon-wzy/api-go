@@ -7,12 +7,16 @@ import (
 	"io"
 	"net/http"
 	"net/url"
-	"time"
 )
 
-func doPostClient(requestUrl string, requestData map[string]any, requestHeader map[string]string) any {
+// doPostClient
+// url 完整的请求路径
+// params 请求参数
+// header 请求头
+// httpClient *HttpClient
+// update to custom timeout
+func doPostClient(requestUrl string, requestData map[string]any, requestHeader map[string]string, httpClient *HttpClient) any {
 	defer common.RequestRecover()
-	httpClient := http.DefaultClient
 	jsonData, jsonErr := json.Marshal(requestData)
 	if jsonErr != nil {
 		panic(jsonErr)
@@ -26,7 +30,8 @@ func doPostClient(requestUrl string, requestData map[string]any, requestHeader m
 			request.Header.Add(k, v)
 		}
 	}
-	resp, repErr := httpClient.Do(request)
+	//update to custom timeout
+	resp, repErr := httpClient.client.Do(request)
 	if repErr != nil {
 		panic(reqErr)
 	}
@@ -37,12 +42,14 @@ func doPostClient(requestUrl string, requestData map[string]any, requestHeader m
 	return string(body)
 }
 
-func doGetClient(requireUrl string, requireParams map[string]string, requireHeader map[string]string) any {
+// doGetClient
+// url 完整的请求路径
+// params 请求参数
+// header 请求头
+// httpClient *HttpClient
+// update to custom timeout
+func doGetClient(requireUrl string, requireParams map[string]string, requireHeader map[string]string, httpClient *HttpClient) any {
 	defer common.RequestRecover()
-
-	httpClient := http.Client{
-		Timeout: 9 * time.Second,
-	}
 	params := url.Values{}
 	Url, err := url.Parse(requireUrl)
 	if err != nil {
@@ -64,7 +71,8 @@ func doGetClient(requireUrl string, requireParams map[string]string, requireHead
 			req.Header.Add(k, v)
 		}
 	}
-	resp, repErr := httpClient.Do(req)
+	//update to custom timeout
+	resp, repErr := httpClient.client.Do(req)
 	if repErr != nil {
 		panic(repErr)
 	}
@@ -80,13 +88,16 @@ func doGetClient(requireUrl string, requireParams map[string]string, requireHead
 // method 请求方式
 // header 请求头
 // params 请求参数
-func DoRequest(url string, method string, header map[string]string, params map[string]any) any {
+// httpClient *HttpClient
+func DoRequest(url string, method string, header map[string]string, params map[string]any, httpClient *HttpClient) any {
 	switch method {
 	case http.MethodGet:
 		paramsStr := convert(params)
-		return doGetClient(url, paramsStr, header)
+		//update to custom timeout
+		return doGetClient(url, paramsStr, header, httpClient)
 	case http.MethodPost:
-		return doPostClient(url, params, header)
+		//update to custom timeout
+		return doPostClient(url, params, header, httpClient)
 	default:
 		return "请指定请求方式!"
 	}
