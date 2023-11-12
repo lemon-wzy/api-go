@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	"net/url"
+	"time"
 )
 
 // doPostClient
@@ -103,8 +104,31 @@ func DoRequest(url string, method string, header map[string]string, params map[s
 	}
 }
 
-// 参数转换
+// DoRequestByConsoleArgs
+// consoleArgs 命令行参数
+// httpClient *HttpClient 请求客户端
+func DoRequestByConsoleArgs(consoleArgs *common.ConsoleArgs, client *HttpClient) any {
+	if client == nil {
+		client = &HttpClient{
+			client: &http.Client{
+				Timeout: 9 * time.Second,
+			},
+		}
+	}
+	switch consoleArgs.M {
+	case http.MethodGet:
+		paramStr := convert(consoleArgs.P)
+		return doGetClient(consoleArgs.U, paramStr, consoleArgs.H, client)
+	case http.MethodPost:
+		return doPostClient(consoleArgs.U, consoleArgs.P, consoleArgs.H, client)
+	default:
+		return "请指定请求方式!"
+	}
+}
+
+// convert 参数转换
 // params 传入参数
+// return 转换后的参数
 func convert(params map[string]any) map[string]string {
 	result := make(map[string]string)
 	for k, v := range params {
