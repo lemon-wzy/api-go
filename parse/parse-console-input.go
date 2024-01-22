@@ -13,7 +13,7 @@ var flagSet = flag.NewFlagSet("custom flag", flag.ExitOnError)
 
 func init() {
 	flagSet.StringVar(&consoleArgs.U, "u", "", "request url ")
-	flagSet.StringVar(&consoleArgs.M, "m", "", "request method ")
+	flagSet.StringVar(&consoleArgs.M, "m", "GET", "request method ")
 	flagSet.Int64Var(&consoleArgs.T, "t", 0, "request timeout")
 	flagSet.Var(NewHeaderValue(map[string]string{}, &consoleArgs.H), "H", "request head")
 	flagSet.Var(NewParamValue(map[string]any{}, &consoleArgs.P), "p", "request params")
