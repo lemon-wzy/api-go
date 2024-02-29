@@ -5,6 +5,7 @@ import (
 	"os"
 )
 
+// RequestRecover 自定义请求错误
 func RequestRecover() {
 	r := recover()
 	if r != nil {
@@ -13,6 +14,7 @@ func RequestRecover() {
 	}
 }
 
+// ParseRecover 自定义解析错误
 func ParseRecover() {
 	r := recover()
 	if r != nil {

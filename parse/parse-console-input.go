@@ -11,6 +11,7 @@ import (
 var consoleArgs = &common.ConsoleArgs{}
 var flagSet = flag.NewFlagSet("custom flag", flag.ExitOnError)
 
+// 初始化解析命令行参数
 func init() {
 	flagSet.StringVar(&consoleArgs.U, "u", "", "request url ")
 	flagSet.StringVar(&consoleArgs.M, "m", "GET", "request method ")
@@ -23,6 +24,8 @@ func init() {
 		os.Exit(1)
 	}
 }
+
+// Init 初始化
 func Init() {
 	if consoleArgs.HELP {
 		flagSet.Usage()

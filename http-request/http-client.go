@@ -5,10 +5,12 @@ import (
 	"time"
 )
 
+// HttpClient http客户端类型
 type HttpClient struct {
 	client *http.Client
 }
 
+// DefaultClient 默认客户端
 func DefaultClient() *HttpClient {
 	return &HttpClient{
 		client: &http.Client{
@@ -17,6 +19,7 @@ func DefaultClient() *HttpClient {
 	}
 }
 
+// CustomTimeOutClient 自定义客户端的超时时间
 func CustomTimeOutClient(timeout int64) *HttpClient {
 	return &HttpClient{
 		client: &http.Client{
@@ -25,6 +28,8 @@ func CustomTimeOutClient(timeout int64) *HttpClient {
 	}
 }
 
+// Get 获取客户端
+// return *HttpClient
 func (client *HttpClient) Get() *HttpClient {
 	return client
 }
